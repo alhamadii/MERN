@@ -5,7 +5,8 @@ const connectDB = async () => {
   try {
     await mangoose.connect(db, {
       useUnifiedTopology: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useCreateIndex: true
     });
     console.log("mongoDB connected...");
   } catch (err) {
