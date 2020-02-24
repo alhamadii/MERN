@@ -80,28 +80,62 @@ router.post(
     if (facebook) profileFields.social.facebook = facebook;
     if (linkedin) profileFields.social.linkedin = linkedin;
     if (instagram) profileFields.social.instagram = instagram;
-
     try {
       let profile = await Profile.findOne({ user: req.user.id });
 
       if (profile) {
-        //update
-        profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profile },
-          { new: true }
-        );
-        // return res.json(profile);
-      }
+        // Update
+        try {
+          profile = await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $set: profileFields },
+            { new: true },
+            (err, doc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                return res.status(200).json(doc);
+              }
+            }
+          );
+        } catch (error) {
+          console.log(error.message);
+        }
+      } else {
+        // Create
+        profile = new Profile(profileFields);
 
-      //create
-      profile = new Profile(profileFields);
-      await profile.save();
-      return res.json(profile);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
+        await profile.save();
+
+        return res.status(200).json(profile);
+      }
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: error.message });
     }
+    // ===============original
+    // try {
+    //   let profile = await Profile.findOne({ user: req.user.id });
+
+    //   if (profile) {
+    //     //update
+    //     profile = await Profile.findOneAndUpdate(
+    //       { user: req.user.id },
+    //       { $set: profile },
+    //       { new: true }
+    //     );
+    //     // return res.json(profile);
+    //   }
+
+    //   //create
+    //   profile = new Profile(profileFields);
+    //   await profile.save();
+    //   return res.json(profile);
+    // } catch (err) {
+    //   console.error(err.message);
+    //   res.status(500).send("Server Error");
+    // }
+    //=====================
   }
 );
 
