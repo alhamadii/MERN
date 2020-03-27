@@ -6,6 +6,8 @@ const auth = require("../../middleware/auth"); // we add it to protect the route
 const { check, validationResult } = require("express-validator");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
+const Post = require("../../models/Post");
+
 // @toute  GET api/profile/me
 // @desc   Get current user profile
 // @access Private
@@ -178,7 +180,8 @@ router.get("/user/:user_id", async (req, res) => {
 // @access Private
 router.delete("/", auth, async (req, res) => {
   try {
-    //@todo - remove users posts
+    //remove users posts
+    await Post.deleteMany({ user: req.user.id });
     //Remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
     //Rmove user
