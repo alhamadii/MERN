@@ -12,6 +12,7 @@ import AddExperience from "./components/profile-forms/AddExperience";
 import AddEducation from "./components/profile-forms/AddEducation";
 import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
+import Posts from "./components/posts/Posts";
 import PrivateRoute from "./components/routing/PrivateRoute";
 //Redux
 import { Provider } from "react-redux";
@@ -27,7 +28,11 @@ if (localStorage.token) {
 }
 
 const App = () => {
+  // useEffect(() => {
+  //   store.dispatch(loadUser());
+  // }, []);
   useEffect(() => {
+    setAuthToken(localStorage.token);
     store.dispatch(loadUser());
   }, []);
 
@@ -65,6 +70,7 @@ const App = () => {
                 path='/add-education'
                 component={AddEducation}
               />
+              <PrivateRoute exact path='/posts' component={Posts} />
             </Switch>
           </section>
         </Fragment>
